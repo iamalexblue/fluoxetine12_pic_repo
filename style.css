@@ -5,10 +5,10 @@ body, html {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000; /* 确保整个页面背景为黑色 */
+    background: #000;
 }
 
-/* 加载动画容器 - 修改背景颜色为黑色 */
+/* 加载动画容器 */
 .loader-container {
     position: fixed;
     inset: 0;
@@ -16,15 +16,15 @@ body, html {
     align-items: center;
     justify-content: center;
     z-index: 2;
-    background: #000; /* 设置为黑色背景 */
+    background: #000;
 }
 
-/* 加载动画 - 确保居中 */
+/* 加载动画 */
 .loader {
     display: block;
-    width: 200px; /* 增加尺寸 */
-    height: 200px;
-    margin: auto; /* 确保居中 */
+    width: clamp(150px, 30vw, 250px); /* 响应式尺寸 */
+    height: clamp(150px, 30vw, 250px);
+    margin: auto;
 }
 
 /* 视频容器 */
@@ -48,7 +48,7 @@ body, html {
     transform: scale(1.05);
 }
 
-/* 主视频 - 改进全屏和居中效果 */
+/* 主视频 */
 #rickrollVideo {
     position: absolute;
     top: 50%;
@@ -59,12 +59,25 @@ body, html {
     width: auto;
     height: auto;
     z-index: 1;
-    object-fit: cover; /* 确保视频覆盖整个容器 */
+    object-fit: cover;
 }
 
-/* 加载完成后隐藏加载动画的类 */
+/* 加载完成后隐藏加载动画 */
 .loader-hidden {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s ease-out;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .loader {
+        width: 150px; /* 小屏幕上使用固定尺寸 */
+        height: 150px;
+    }
+    
+    /* 移动端可能需要更激进的模糊效果 */
+    .video-background {
+        filter: blur(8px);
+    }
 }    

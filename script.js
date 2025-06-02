@@ -3,12 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = document.querySelector('.loader-container');
     const container = document.querySelector('.video-container');
     
+    // 确保视频可以播放声音
+    video.muted = false; // 取消静音
+    video.volume = 1; // 设置音量为最大
+    
     // 视频加载完成后隐藏加载动画
     video.addEventListener('canplay', () => {
-        // 延迟隐藏加载动画，确保视频准备好
         setTimeout(() => {
             loader.classList.add('loader-hidden');
-            // 完全隐藏加载动画
             setTimeout(() => {
                 loader.style.display = 'none';
             }, 500);
@@ -25,11 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const videoWidth = video.videoWidth;
         const videoHeight = video.videoHeight;
         
-        // 计算视频宽高比和容器宽高比
         const videoRatio = videoWidth / videoHeight;
         const containerRatio = containerWidth / containerHeight;
         
-        // 根据比例调整视频尺寸，确保完全覆盖容器
         if (containerRatio > videoRatio) {
             video.style.width = '100%';
             video.style.height = 'auto';
@@ -42,21 +42,50 @@ document.addEventListener('DOMContentLoaded', () => {
     // 视频元数据加载后调整
     video.addEventListener('loadedmetadata', adjustVideo);
     
+    // 处理移动端自动播放限制
+    function handlePlay() {
+        video.play().catch(error => {
+            console.error('视频播放失败:', error);
+            // 提示用户点击播放
+            const playButton = document.createElement('button');
+            playButton.textContent = '点击播放';
+            playButton.style.position = 'fixed';
+            playButton.style.top = '50%';
+            playButton.style.left = '50%';
+            playButton.style.transform = 'translate(-50%, -50%)';
+            playButton.style.padding = '10px 20px';
+            playButton.style.fontSize = '16px';
+            playButton.style.zIndex = '3';
+            playButton.addEventListener('click', () => {
+                video.play().then(() => {
+                    document.body.removeChild(playButton);
+                });
+            });
+            document.body.appendChild(playButton);
+        });
+    }
+    
+    // 尝试播放视频
+    video.addEventListener('loadeddata', handlePlay);
+    
+    // 用户交互后尝试播放（解决移动端自动播放限制）
+    document.addEventListener('touchstart', handlePlay, { once: true });
+    document.addEventListener('click', handlePlay, { once: true });
+    
     // 尝试进入全屏模式
     function enterFullscreen() {
         if (container.requestFullscreen) {
             container.requestFullscreen();
-        } else if (container.webkitRequestFullscreen) { /* Safari */
+        } else if (container.webkitRequestFullscreen) {
             container.webkitRequestFullscreen();
-        } else if (container.msRequestFullscreen) { /* IE11 */
+        } else if (container.msRequestFullscreen) {
             container.msRequestFullscreen();
         }
     }
     
-    // 视频可以播放时进入全屏
     video.addEventListener('canplay', enterFullscreen);
     
-    // 点击视频也可以切换全屏状态
+    // 点击视频切换全屏状态
     video.addEventListener('click', () => {
         if (document.fullscreenElement) {
             document.exitFullscreen();
