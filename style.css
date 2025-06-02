@@ -1,35 +1,59 @@
-/* styles.css */
-
-/* 全局样式：移除默认边距和滚动条 */
+/* 全局样式 */
 body, html {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* 防止滚动条出现 */
     width: 100%;
     height: 100%;
+    overflow: hidden;
+    background: #000; /* 黑色背景，视频加载时显示 */
 }
 
-/* 视频样式：全屏覆盖 */
-video {
-    position: fixed; /* 固定定位 */
-    top: 50%; /* 垂直居中 */
-    left: 50%; /* 水平居中 */
-    transform: translate(-50%, -50%); /* 调整中心点 */
-    min-width: 100%; /* 最小宽度占满屏幕 */
-    min-height: 100%; /* 最小高度占满屏幕 */
-    width: auto; /* 自动调整宽度 */
-    height: auto; /* 自动调整高度 */
-    object-fit: cover; /* 保持比例并覆盖整个屏幕 */
-    z-index: -1; /* 确保视频在背景层 */
+/* 视频容器 */
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
 }
 
-/* 可选：添加一个半透明遮罩层 */
-.overlay {
-    position: fixed;
+.video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 确保视频覆盖整个屏幕，裁剪多余部分 */
+}
+
+/* 加载动画样式 */
+.loader-container {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色 */
-    z-index: 1; /* 置于视频之上 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    z-index: 1000; /* 确保加载动画在最顶层 */
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
