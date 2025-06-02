@@ -1,4 +1,4 @@
-// 全屏控制函数
+// script.js
 function toggleFullScreen() {
     const video = document.getElementById('rickrollVideo');
     if (document.fullscreenElement) {
@@ -6,17 +6,17 @@ function toggleFullScreen() {
         document.exitFullscreen();
     } else {
         // 进入全屏
-        video.requestFullscreen();
+        video.requestFullscreen().catch(() => {
+            console.error('Failed to enter fullscreen mode.');
+        });
     }
 }
 
-// 隐藏加载动画并显示视频
 function hideLoader() {
     const loaderContainer = document.querySelector('.loader-container');
     loaderContainer.style.display = 'none';
 }
 
-// 页面加载时自动进入全屏
 document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('rickrollVideo');
 
