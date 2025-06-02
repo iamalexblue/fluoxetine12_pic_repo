@@ -1,59 +1,35 @@
-/* 全局样式 */
+/* styles.css */
+
+/* 全局样式：移除默认边距和滚动条 */
 body, html {
     margin: 0;
     padding: 0;
+    overflow: hidden; /* 防止滚动条出现 */
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    background: #000; /* 黑色背景，视频加载时显示 */
 }
 
-/* 视频容器 */
-.video-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
+/* 视频样式：全屏覆盖 */
+video {
+    position: fixed; /* 固定定位 */
+    top: 50%; /* 垂直居中 */
+    left: 50%; /* 水平居中 */
+    transform: translate(-50%, -50%); /* 调整中心点 */
+    min-width: 100%; /* 最小宽度占满屏幕 */
+    min-height: 100%; /* 最小高度占满屏幕 */
+    width: auto; /* 自动调整宽度 */
+    height: auto; /* 自动调整高度 */
+    object-fit: cover; /* 保持比例并覆盖整个屏幕 */
+    z-index: -1; /* 确保视频在背景层 */
 }
 
-.video-container video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 保持视频覆盖整个容器，裁剪多余部分 */
-}
-
-/* 叠加层样式 */
+/* 可选：添加一个半透明遮罩层 */
 .overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-}
-
-.title {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.fullscreen-btn {
-    padding: 1rem 3rem;
-    font-size: 1.2rem;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.fullscreen-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色 */
+    z-index: 1; /* 置于视频之上 */
 }

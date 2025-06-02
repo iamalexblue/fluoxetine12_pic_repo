@@ -1,18 +1,24 @@
-// 全屏控制函数
-function toggleFullScreen() {
-    const video = document.getElementById('rickrollVideo');
-    if (document.fullscreenElement) {
-        // 退出全屏
-        document.exitFullscreen();
-    } else {
-        // 进入全屏
-        video.requestFullscreen();
-    }
-}
+// script.js
 
-// 自动进入全屏（可选）
+// 页面加载时尝试全屏播放
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        toggleFullScreen();
-    }, 1000); // 延迟1秒触发，避免某些浏览器限制
+    const video = document.getElementById('rickrollVideo');
+
+    // 请求全屏
+    function requestFullScreen() {
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.mozRequestFullScreen) { // Firefox
+            video.mozRequestFullScreen();
+        } else if (video.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { // IE/Edge
+            video.msRequestFullscreen();
+        }
+    }
+
+    // 检查视频是否可以播放
+    video.addEventListener('canplay', () => {
+        requestFullScreen();
+    });
 });
