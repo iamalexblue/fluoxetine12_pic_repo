@@ -1,72 +1,67 @@
-// 视频智能裁剪与背景模糊处理
 document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('rickrollVideo');
-    const container = document.getElementById('videoContainer');
-    const background = document.getElementById('videoBackground');
     const loader = document.querySelector('.loader-container');
-
+    const container = document.querySelector('.video-container');
+    
     // 视频加载完成后隐藏加载动画
     video.addEventListener('canplay', () => {
+        // 延迟隐藏加载动画，确保视频准备好
         setTimeout(() => {
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 500);
-        }, 1000); // 至少显示1秒加载动画
+            loader.classList.add('loader-hidden');
+            // 完全隐藏加载动画
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 500);
+        }, 500);
     });
-
-    // 视频元数据加载后设置背景
-    video.addEventListener('loadeddata', () => {
-        // 创建视频缩略图作为背景
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+    
+    // 窗口大小变化时重新调整视频
+    window.addEventListener('resize', adjustVideo);
+    
+    // 初始调整视频
+    function adjustVideo() {
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
         
-        // 设置canvas尺寸
-        canvas.width = 320;
-        canvas.height = 180;
+        // 计算视频宽高比和容器宽高比
+        const videoRatio = videoWidth / videoHeight;
+        const containerRatio = containerWidth / containerHeight;
         
-        // 绘制视频帧到canvas
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-        // 将canvas内容转为图片URL
-        const imgUrl = canvas.toDataURL();
-        
-        // 设置为背景
-        background.style.backgroundImage = `url(${imgUrl})`;
-    });
-
-    // 智能裁剪函数
-    function adjustVideoFit() {
-        const videoRatio = video.videoWidth / video.videoHeight;
-        const containerRatio = container.clientWidth / container.clientHeight;
-        
-        if (videoRatio > containerRatio) {
-            // 视频更宽，使用高度为基准
-            video.style.height = '100%';
-            video.style.width = 'auto';
-        } else {
-            // 视频更高，使用宽度为基准
+        // 根据比例调整视频尺寸，确保完全覆盖容器
+        if (containerRatio > videoRatio) {
             video.style.width = '100%';
             video.style.height = 'auto';
+        } else {
+            video.style.width = 'auto';
+            video.style.height = '100%';
         }
     }
-
-    // 初始调整与窗口变化时调整
-    video.addEventListener('loadedmetadata', adjustVideoFit);
-    window.addEventListener('resize', adjustVideoFit);
-    setTimeout(adjustVideoFit, 100); // 确保初始调整
-
-    // 全屏处理
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            container.requestFullscreen().catch(err => {
-                console.error(`全屏请求失败: ${err.message}`);
-            });
+    
+    // 视频元数据加载后调整
+    video.addEventListener('loadedmetadata', adjustVideo);
+    
+    // 尝试进入全屏模式
+    function enterFullscreen() {
+        if (container.requestFullscreen) {
+            container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) { /* Safari */
+            container.webkitRequestFullscreen();
+        } else if (container.msRequestFullscreen) { /* IE11 */
+            container.msRequestFullscreen();
         }
     }
-
-    // 视频准备好后进入全屏
-    video.addEventListener('canplay', toggleFullScreen);
     
-    // 点击视频切换全屏
-    video.addEventListener('click', toggleFullScreen);
-});
+    // 视频可以播放时进入全屏
+    video.addEventListener('canplay', enterFullscreen);
     
+    // 点击视频也可以切换全屏状态
+    video.addEventListener('click', () => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        } else {
+            enterFullscreen();
+        }
+    });
+});    
