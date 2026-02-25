@@ -7,16 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     video.muted = false; // 取消静音
     video.volume = 1; // 设置音量为最大
     
-    // 视频加载完成后隐藏加载动画
-    video.addEventListener('canplay', () => {
-        setTimeout(() => {
-            loader.classList.add('loader-hidden');
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, 500);
-        }, 500);
-    });
-    
     // 窗口大小变化时重新调整视频
     window.addEventListener('resize', adjustVideo);
     

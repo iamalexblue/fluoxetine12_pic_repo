@@ -8,25 +8,6 @@ body, html {
     background: #000;
 }
 
-/* 加载动画容器 */
-.loader-container {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    background: #000;
-}
-
-/* 加载动画 */
-.loader {
-    display: block;
-    width: clamp(150px, 30vw, 250px); /* 响应式尺寸 */
-    height: clamp(150px, 30vw, 250px);
-    margin: auto;
-}
-
 /* 视频容器 */
 .video-container {
     position: fixed;
